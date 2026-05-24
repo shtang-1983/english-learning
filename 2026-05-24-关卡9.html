@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>第9关 · 词汇通关</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--p:#6366f1;--bg:#f8f7ff;--card:#fff;--text:#1e1b4b;--txt:#6b7280;--r:20px;--rs:12px}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC",sans-serif;background:var(--bg);color:var(--text);padding:24px 16px 80px}
+.hdr{background:linear-gradient(135deg,#6366f1,#a78bfa);color:#fff;border-radius:var(--r);padding:28px 24px;margin-bottom:20px}
+.h1{font-size:22px;font-weight:700;margin-bottom:6px}
+.meta{font-size:14px;opacity:0.9}
+.badges{margin-top:12px;display:flex;flex-wrap:wrap;gap:8px}
+.badge{display:inline-block;padding:5px 14px;border-radius:20px;font-size:12px;background:rgba(255,255,255,0.2);color:#fff}
+.prog{background:var(--card);border-radius:var(--r);padding:20px 24px;margin-bottom:16px}
+.prog-hdr{display:flex;justify-content:space-between;font-size:14px;font-weight:600;margin-bottom:12px}
+.prog-bar{background:#eef2ff;border-radius:12px;height:16px}
+.prog-fill{height:100%;background:linear-gradient(90deg,#6366f1,#a78bfa);border-radius:12px;display:flex;align-items:center;justify-content:flex-end;padding-right:10px}
+.prog-fill span{font-size:11px;font-weight:700;color:#fff}
+.prog-sub{display:flex;justify-content:space-between;font-size:12px;color:var(--txt);margin-top:8px}
+.sec{background:var(--card);border-radius:var(--r);padding:24px;margin-bottom:16px}
+.sec-lbl{font-size:16px;font-weight:700;color:var(--p);margin-bottom:16px;display:flex;align-items:center;gap:8px}
+.sec-lbl::before{content:"";width:4px;height:20px;background:linear-gradient(180deg,#6366f1,#a78bfa);border-radius:2px}
+.fc{perspective:1000px;margin-bottom:14px}
+.fc-inner{position:relative;width:100%;min-height:160px;transition:transform 0.6s;transform-style:preserve-3d;cursor:pointer;border-radius:var(--rs)}
+.fc-inner.flipped{transform:rotateY(180deg)}
+.fc-front,.fc-back{position:absolute;width:100%;backface-visibility:hidden;border-radius:var(--rs);padding:20px}
+.fc-front{display:flex;flex-direction:column;justify-content:center;min-height:160px;background:linear-gradient(135deg,#f8f7ff,#ede9fe);border:2px solid #e0e7ff}
+.fc-back{transform:rotateY(180deg);background:linear-gradient(135deg,#6366f1,#a78bfa);color:#fff;display:flex;flex-direction:column;justify-content:center}
+.w-main{font-size:26px;font-weight:800;color:var(--text);margin-bottom:4px}
+.w-sub{font-size:14px;color:var(--txt)}
+.tap-hint{font-size:12px;color:#a78bfa;margin-top:8px;text-align:center}
+.c-meaning{font-size:18px;font-weight:700;margin-bottom:6px}
+.c-phrase{font-size:13px;background:rgba(255,255,255,0.25);padding:3px 10px;border-radius:8px;margin-bottom:6px}
+.c-ex{font-size:14px;opacity:0.85;font-style:italic;margin-top:8px;line-height:1.6}
+.c-ex-lbl{font-size:12px;opacity:0.7;margin-bottom:4px}
+.quick{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.quick-w{background:#f8f7ff;border:1.5px solid #e0e7ff;border-radius:10px;padding:12px;font-size:14px}
+.quick-w strong{font-size:16px;color:var(--p)}
+.t-item{background:#f9fafb;border-radius:var(--rs);padding:18px;margin-bottom:14px}
+.t-num{font-size:13px;font-weight:700;color:var(--p);margin-bottom:8px}
+.t-sent{font-size:16px;color:var(--text);margin-bottom:10px;line-height:1.8}
+.t-inp{width:100%;padding:12px 16px;border:2px solid #d1d5db;border-radius:10px;font-size:17px;background:#fff;font-family:inherit}
+.t-inp:focus{outline:none;border-color:#a78bfa}
+.hint-txt{display:inline-block;background:#fef3c7;color:#92400e;font-size:13px;padding:1px 8px;border-radius:6px;margin-left:4px}
+.btn{display:block;width:100%;padding:18px;background:linear-gradient(135deg,#6366f1,#a78bfa);color:#fff;border:none;border-radius:var(--rs);font-size:18px;font-weight:700;cursor:pointer;box-shadow:0 4px 16px rgba(99,102,241,0.35)}
+.ok{display:none;position:fixed;inset:0;background:rgba(99,102,241,0.92);z-index:999;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:40px 24px;color:#fff}
+.ok.show{display:flex;animation:fadein .4s}
+@keyframes fadein{from{opacity:0}to{opacity:1}}
+.ok-emoji{font-size:80px;margin-bottom:20px;animation:bounce 1s ease}
+@keyframes bounce{0%,100%{transform:translateY(0)}40%{transform:translateY(-30px)}60%{transform:translateY(-15px)}}
+.ok-title{font-size:28px;font-weight:800;margin-bottom:12px}
+.ok-sub{font-size:16px;opacity:0.9;line-height:1.8}
+.checkin{background:linear-gradient(135deg,#f0fdf4,#dcfce7);border:2px solid #bbf7d0;border-radius:var(--rs);padding:16px;font-size:14px;color:#166534;text-align:center}
+.ext-section{background:#fffaf0;border:1.5px solid #feebc8}
+.ext-section .sec-lbl{color:#d97706}
+</style>
+</head>
+<body>
+<div class="hdr">
+ <h1 class="h1">第9关 · 7年级下册 Unit 8</h1>
+ <p class="meta">2026年5月24日 · 约15分钟 · Unit 8 正在学习</p>
+ <div class="badges">
+ <span class="badge">今日新学 10词</span>
+ <span class="badge">复习第7、6、5关</span>
+ <span class="badge">含2个短语搭配</span>
+ <span class="badge">课堂同步 Unit 8</span>
+ </div>
+</div>
+<div class="prog">
+ <div class="prog-hdr"><span>词汇通关地图</span><span id="pct">0%</span></div>
+ <div class="prog-bar"><div class="prog-fill" id="pbar" style="width:0%"><span id="ptxt">0词</span></div></div>
+ <div class="prog-sub"><span>目标：9年级前完成2000词</span><span>第9关进行中</span></div>
+</div>
+
+<div class="sec">
+ <div class="sec-lbl">第1部分 · 新词学习（点击卡片翻转查看）</div>
+
+ <div class="fc" onclick="flipCard(this)"><div class="fc-inner"><div class="fc-front"><div class="w-main">fisherman</div><div class="w-sub">/ˈfɪʃəmən/ n. 渔民</div><div class="tap-hint">点击翻转</div></div><div class="fc-back"><div class="c-meaning">fisherman · 渔民</div><div class="c-phrase">复数：fishermen</div><div class="c-ex-lbl">例句</div><div class="c-ex">Every morning, the fishermen go out to sea in their boats.</div></div></div></div>
+
+ <div class="fc" onclick="flipCard(this)"><div class="fc-inner"><div class="fc-front"><div class="w-main">adventure</div><div class="w-sub">/ədˈventʃə(r)/ n. 冒险；历险</div><div class="tap-hint">点击翻转</div></div><div class="fc-back"><div class="c-meaning">adventure · 冒险</div><div class="c-phrase">have an adventure = 去冒险</div><div class="c-ex-lbl">例句</div><div class="c-ex">The children had an exciting adventure in the forest last weekend.</div></div></div></div>
+
+ <div class="fc" onclick="flipCard(this)"><div class="fc-inner"><div class="fc-front"><div class="w-main">magic</div><div class="w-sub">/ˈmædʒɪk/ adj. 神奇的；n. 魔法</div><div class="tap-hint">点击翻转</div></div><div class="fc-back"><div class="c-meaning">magic · 神奇的；魔法</div><div class="c-phrase">like magic = 像变魔术一样</div><div class="c-ex-lbl">例句</div><div class="c-ex">The palace looked magical under the moonlight last night.</div></div></div></div>
+
+ <div class="fc" onclick="flipCard(this)"><div class="fc-inner"><div class="fc-front"><div class="w-main">fantasy</div><div class="w-sub">/ˈfæntəsi/ n. 奇幻小说</div><div class="tap-hint">点击翻转</div></div><div class="fc-back"><div class="c-meaning">fantasy · 奇幻小说</div><div class="c-phrase">science fantasy = 科幻奇幻</div><div class="c-ex-lbl">例句</div><div class="c-ex">This fantasy novel is about a boy who finds a magic key.</div></div></div></div>
+
+ <div class="fc" onclick="flipCard(this)"><div class="fc-inner"><div class="fc-front"><div class="w-main">happen</div><div class="w-sub">/ˈhæpən/ v. 发生</div><div class="tap-hint">点击翻转</div></div><div class="fc-back"><div class="c-meaning">happen · 发生</div><div class="c-phrase">happen to = 碰巧</div><div class="c-ex-lbl">例句</div><div class="c-ex">What happened next? The story became very exciting.</div></div></div></div>
+
+ <div class="fc" onclick="flipCard(this)"><div class="fc-inner"><div class="fc-front"><div class="w-main">series</div><div class="w-sub">/ˈsɪəriːz/ n. 连续剧；系列</div><div class="tap-hint">点击翻转</div></div><div class="fc-back"><div class="c-meaning">series · 连续剧</div><div class="c-phrase">a series of = 一系列的</div><div class="c-ex-lbl">例句</div><div class="c-ex">She watched a whole series of cartoons on Saturday afternoon.</div></div></div></div>
+
+ <div class="fc" onclick="flipCard(this)"><div class="fc-inner"><div class="fc-front"><div class="w-main">publish</div><div class="w-sub">/ˈpʌblɪʃ/ v. 出版</div><div class="tap-hint">点击翻转</div></div><div class="fc-back"><div class="c-meaning">publish · 出版</div><div class="c-phrase">publishing house = 出版社</div><div class="c-ex-lbl">例句</div><div class="c-ex">The school newspaper is published every Friday afternoon.</div></div></div></div>
+
+ <div class="fc" onclick="flipCard(this)"><div class="fc-inner"><div class="fc-front"><div class="w-main">imagined</div><div class="w-sub">/ɪˈmædʒɪnd/ adj. 想象的</div><div class="tap-hint">点击翻转</div></div><div class="fc-back"><div class="c-meaning">imagined · 想象的</div><div class="c-phrase">the imagined world = 想象的世界</div><div class="c-ex-lbl">例句</div><div class="c-ex">The story is about an imagined world with flying ships and magic.</div></div></div></div>
+
+ <div class="quick">
+ <div class="quick-w"><strong>reach</strong> /riːtʃ/ vt. 抵达；达到</div>
+ <div class="quick-w"><strong>fail</strong> /feɪl/ vi.&amp;vt. 失败；不及格</div>
+ </div>
+</div>
+
+<div class="sec ext-section">
+ <div class="sec-lbl">第1.5部分 · 拓展加餐 · 看懂即可</div>
+
+ <div class="fc" onclick="flipCard(this)"><div class="fc-inner"><div class="fc-front"><div class="w-main">fiction</div><div class="w-sub">/ˈfɪkʃn/ n. 小说（总称）</div><div class="tap-hint">点击翻转</div></div><div class="fc-back"><div class="c-meaning">fiction · 小说类</div><div class="c-ex-lbl">例句</div><div class="c-ex">This shelf has many fiction books for teenagers to read.</div></div></div></div>
+
+ <div class="fc" onclick="flipCard(this)"><div class="fc-inner"><div class="fc-front"><div class="w-main">novelist</div><div class="w-sub">/ˈnɒvəlɪst/ n. 小说家</div><div class="tap-hint">点击翻转</div></div><div class="fc-back"><div class="c-meaning">novelist · 小说家</div><div class="c-ex-lbl">例句</div><div class="c-ex">The novelist wrote many popular stories for young readers.</div></div></div></div>
+
+ <div class="fc" onclick="flipCard(this)"><div class="fc-inner"><div class="fc-front"><div class="w-main">plot</div><div class="w-sub">/plɒt/ n. 情节</div><div class="tap-hint">点击翻转</div></div><div class="fc-back"><div class="c-meaning">plot · 情节</div><div class="c-ex-lbl">例句</div><div class="c-ex">The plot of this story is about a magical key and a secret island.</div></div></div></div>
+</div>
+
+<div class="sec">
+ <div class="sec-lbl">第2部分 · 语境填空测试</div>
+ <div class="t-item"><div class="t-num">第1题</div><div class="t-sent">The _______（渔民）goes to sea every morning. <span class="hint-txt">f____h____n</span></div><input class="t-inp" id="a1" placeholder="输入答案..." data-answer="fisherman"></div>
+ <div class="t-item"><div class="t-num">第2题</div><div class="t-sent">What _______（发生）next in the story? <span class="hint-txt">h____en</span></div><input class="t-inp" id="a2" placeholder="输入答案..." data-answer="happens"></div>
+ <div class="t-item"><div class="t-num">第3题</div><div class="t-sent">This is a story of _______（魔法）and fantasy. <span class="hint-txt">m____c</span></div><input class="t-inp" id="a3" placeholder="输入答案..." data-answer="magic"></div>
+ <div class="t-item"><div class="t-num">第4题</div><div class="t-sent">She loves reading _______（奇幻小说）books. <span class="hint-txt">f______y</span></div><input class="t-inp" id="a4" placeholder="输入答案..." data-answer="fantasy"></div>
+ <div class="t-item"><div class="t-num">第5题</div><div class="t-sent">This TV _______（连续剧）is very popular. <span class="hint-txt">s____s</span></div><input class="t-inp" id="a5" placeholder="输入答案..." data-answer="series"></div>
+ <div class="t-item"><div class="t-num">第6题</div><div class="t-sent">The book was _______（出版）in 2020. <span class="hint-txt">pu______h</span></div><input class="t-inp" id="a6" placeholder="输入答案..." data-answer="published"></div>
+ <div class="t-item"><div class="t-num">第7题</div><div class="t-sent">I can _______（抵达）school in 10 minutes. <span class="hint-txt">r____h</span></div><input class="t-inp" id="a7" placeholder="输入答案..." data-answer="reach"></div>
+ <div class="t-item"><div class="t-num">第8题</div><div class="t-sent">Don't give up. Try _______（最终）you will succeed. <span class="hint-txt">f______y</span></div><input class="t-inp" id="a8" placeholder="输入答案..." data-answer="finally"></div>
+ <div class="t-item"><div class="t-num">第9题</div><div class="t-sent">The _______（公司）employs 100 people in the town. <span class="hint-txt">c____y</span></div><input class="t-inp" id="a9" placeholder="输入答案..." data-answer="company"></div>
+ <div class="t-item"><div class="t-num">第10题</div><div class="t-sent">The story is _______（想象的）. It is not real at all. <span class="hint-txt">i______d</span></div><input class="t-inp" id="a10" placeholder="输入答案..." data-answer="imagined"></div>
+</div>
+
+<div class="sec"><button class="btn" id="submitBtn" onclick="submitAnswers()">提交批改</button></div>
+<div class="sec checkin">第9关打卡完成！通关日期：2026年5月24日</div>
+
+<div id="okOverlay" class="ok">
+ <div class="ok-emoji">🎉</div>
+ <div class="ok-title">今日通关成功！</div>
+ <div class="ok-sub" id="okMsg">战报已送达爸爸的基地</div>
+</div>
+
+<script>
+function flipCard(el){el.querySelector(".fc-inner").classList.toggle("flipped")}
+function submitAnswers(){
+ var correct=0,total=0;
+ var inputs=document.querySelectorAll(".t-inp");
+ inputs.forEach(function(inp){total++;var a=(inp.value||"").trim().toLowerCase();var e=(inp.getAttribute("data-answer")||"").toLowerCase();if(a===e){correct++;inp.style.borderColor="#22c55e"}else{inp.style.borderColor="#ef4444"}});
+ var score=correct+"/"+total;
+ var pct=Math.round(correct/parseInt(total)*100);
+ document.getElementById("pbar").style.width=pct+"%";
+ document.getElementById("ptxt").textContent=correct+"词";
+ document.getElementById("pct").textContent=pct+"%";
+ document.getElementById("okOverlay").classList.add("show");
+ document.getElementById("okMsg").innerHTML="得分："+score+"<br>"+(correct>=8?"战报已送达爸爸的基地 🎉":"继续加油，明天通关！");
+}
+</script>
+</body>
+</html>
