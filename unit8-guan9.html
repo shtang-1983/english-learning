@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>关卡9 · Unit 8 正在进行中</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f5f6fa; color: #333; line-height: 1.6; padding: 16px; min-height: 100vh; }
+  .container { max-width: 480px; margin: 0 auto; }
+
+  .topbar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+  .topbar .level { font-size: 13px; color: #667eea; font-weight: 600; background: #edf2f7; padding: 4px 12px; border-radius: 20px; }
+  .topbar .date { font-size: 12px; color: #a0aec0; }
+
+  .progress-wrap { background: white; border-radius: 16px; padding: 16px 20px; margin-bottom: 16px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+  .progress-label { display: flex; justify-content: space-between; font-size: 12px; color: #718096; margin-bottom: 8px; }
+  .progress-bar { background: #e2e8f0; height: 10px; border-radius: 5px; overflow: hidden; }
+  .progress-bar .fill { background: linear-gradient(90deg, #667eea, #764ba2); height: 100%; border-radius: 5px; transition: width 0.6s ease; width: 0%; }
+  .progress-pct { font-size: 11px; color: #667eea; font-weight: 600; margin-top: 4px; text-align: right; }
+
+  .card { background: white; border-radius: 16px; padding: 20px; margin-bottom: 14px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+  .card-title { font-size: 14px; font-weight: 700; color: #667eea; margin-bottom: 14px; display: flex; align-items: center; gap: 6px; }
+
+  .word-list { display: flex; flex-direction: column; gap: 10px; }
+  .word-card { perspective: 600px; cursor: pointer; }
+  .word-card-inner { position: relative; width: 100%; min-height: 72px; transition: transform 0.5s; transform-style: preserve-3d; }
+  .word-card.flipped .word-card-inner { transform: rotateY(180deg); }
+  .word-card-front, .word-card-back { position: absolute; width: 100%; backface-visibility: hidden; border-radius: 12px; padding: 14px 16px; }
+  .word-card-front { background: #f8f9fa; border: 2px solid #e2e8f0; }
+  .word-card-back { background: linear-gradient(135deg, #667eea, #764ba2); transform: rotateY(180deg); color: white; display: flex; align-items: center; justify-content: center; }
+  .word-card-front .word { font-size: 17px; font-weight: 700; color: #2d3748; }
+  .word-card-front .phonetic { font-size: 12px; color: #a0aec0; margin-top: 2px; }
+  .word-card-front .tap-hint { font-size: 11px; color: #c0ccda; margin-top: 6px; text-align: center; }
+  .word-card-back .meaning { font-size: 16px; font-weight: 600; text-align: center; }
+  .word-card-back .chunk-note { font-size: 12px; opacity: 0.85; margin-top: 4px; text-align: center; }
+
+  .section-label { font-size: 12px; color: #a0aec0; margin-bottom: 8px; margin-top: 16px; }
+
+  .test-item { background: #f8f9fa; border-radius: 12px; padding: 14px 16px; margin-bottom: 10px; }
+  .test-item .sentence { font-size: 14px; color: #2d3748; margin-bottom: 10px; line-height: 1.7; }
+  .test-item input { width: 100%; padding: 9px 12px; border: 2px solid #e2e8f0; border-radius: 10px; font-size: 14px; outline: none; transition: border-color 0.2s, background 0.2s; }
+  .test-item input:focus { border-color: #667eea; }
+  .test-item input.correct { border-color: #48bb78; background: #f0fff4; }
+  .test-item input.half { border-color: #f6ad55; background: #fffaf0; }
+  .test-item input.wrong { border-color: #fc8181; background: #fff5f5; }
+
+  .btn { display: block; width: 100%; padding: 14px; background: linear-gradient(135deg, #667eea, #764ba2); color: white; border: none; border-radius: 12px; font-size: 16px; font-weight: 700; cursor: pointer; transition: transform 0.15s, box-shadow 0.2s; }
+  .btn:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(102,126,234,0.4); }
+  .btn:active { transform: translateY(0); }
+  .btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+
+  .result-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); align-items: center; justify-content: center; z-index: 100; }
+  .result-overlay.show { display: flex; }
+  .result-box { background: white; border-radius: 20px; padding: 32px 24px; text-align: center; max-width: 320px; margin: 16px; animation: popIn 0.4s ease; }
+  @keyframes popIn { 0% { transform: scale(0.7); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
+  .result-box .emoji { font-size: 56px; margin-bottom: 12px; }
+  .result-box h2 { font-size: 20px; color: #2d3748; margin-bottom: 8px; }
+  .result-box p { font-size: 14px; color: #718096; margin-bottom: 20px; }
+  .result-score { display: inline-block; background: linear-gradient(135deg, #667eea, #764ba2); color: white; padding: 8px 20px; border-radius: 20px; font-size: 18px; font-weight: 700; margin-bottom: 16px; }
+  .result-msg { font-size: 14px; color: #48bb78; margin-bottom: 20px; font-weight: 600; }
+  .result-close { background: #edf2f7; color: #4a5568; border: none; padding: 10px 24px; border-radius: 10px; font-size: 14px; cursor: pointer; }
+
+  .ext-section { background: #fffaf0; border: 1px solid #feebc8; }
+  .ext-section .card-title { color: #dd6b20; }
+  .word-card-front.ext { background: #fffaf0; border-color: #feebc8; }
+</style>
+</head>
+<body>
+<div class="container">
+
+<div class="topbar">
+  <span class="level">📗 关卡 9 / 100</span>
+  <span class="date">2026-05-24</span>
+</div>
+
+<div class="progress-wrap">
+  <div class="progress-label">
+    <span>📗 Unit 8 进度</span>
+    <span>0% → 100%</span>
+  </div>
+  <div class="progress-bar"><div class="fill" id="progFill"></div></div>
+  <div class="progress-pct" id="progPct">0%</div>
+</div>
+
+<!-- 新词学习 -->
+<div class="card">
+  <div class="card-title">📖 新词学习（点击卡片查看释义）</div>
+  <div class="word-list" id="wordList"></div>
+</div>
+
+<!-- 拓展加餐 -->
+<div class="card ext-section">
+  <div class="card-title">🍰 拓展加餐 · 认识即可</div>
+  <div class="word-list" id="extList"></div>
+</div>
+
+<!-- 语境填空测试 -->
+<div class="card">
+  <div class="card-title">✏️ 语境填空测试</div>
+  <div class="test-list" id="testList"></div>
+</div>
+
+<button class="btn" id="submitBtn" onclick="submitTest()">🚀 提交答案</button>
+
+</div>
+
+<!-- 结果弹窗 -->
+<div class="result-overlay" id="resultOverlay">
+  <div class="result-box">
+    <div class="emoji" id="resEmoji">🎉</div>
+    <h2 id="resTitle">今日通关成功！</h2>
+    <p>战报已送达爸爸的基地</p>
+    <div class="result-score" id="resScore">8/10</div>
+    <div class="result-msg" id="resMsg">太棒了！继续加油！</div>
+    <button class="result-close" onclick="closeResult()">好的 👌</button>
+  </div>
+</div>
+
+<script>
+const UNIT8_WORDS = [
+  { word: "fisherman", phonetic: "/ˈfɪʃəmən/", meaning: "渔民", type: "word" },
+  { word: "adventure", phonetic: "/ədˈventʃə(r)/", meaning: "历险", type: "word" },
+  { word: "magic", phonetic: "/ˈmædʒɪk/", meaning: "神奇的；魔法", type: "word" },
+  { word: "fantasy", phonetic: "/ˈfæntəsi/", meaning: "奇幻小说", type: "word" },
+  { word: "happen", phonetic: "/ˈhæpən/", meaning: "发生", type: "word" },
+  { word: "series", phonetic: "/ˈsɪəriːz/", meaning: "连续剧", type: "word" },
+  { word: "company", phonetic: "/ˈkʌmpəni/", meaning: "公司", type: "word" },
+  { word: "publish", phonetic: "/ˈpʌblɪʃ/", meaning: "出版", type: "word" },
+  { word: "imagined", phonetic: "/ɪˈmædʒɪnd/", meaning: "想象的", type: "word" },
+  { word: "finally", phonetic: "/ˈfaɪnəli/", meaning: "最终", type: "word" }
+];
+
+const CHUNKS = [
+  { word: "place of interest", meaning: "景点", note: "⚡ 中考高频" },
+  { word: "finish reading", meaning: "读完", note: "⚡ 动词搭配" },
+  { word: "be lost", meaning: "迷路 / 失踪", note: "⚡ 完形高频" }
+];
+
+const EXT_WORDS = [
+  { word: "fiction", meaning: "小说（总称）" },
+  { word: "novelist", meaning: "小说家" },
+  { word: "plot", meaning: "情节" }
+];
+
+const TESTS = [
+  { sentence: "The ____（渔民）goes to sea every morning.", answer: "fisherman", hint: "f" },
+  { sentence: "What ____（发生）next in the story?", answer: "happens", hint: "h" },
+  { sentence: "This is a story of ____（魔法）and fantasy.", answer: "magic", hint: "m" },
+  { sentence: "She loves reading ____（奇幻小说）books.", answer: "fantasy", hint: "f" },
+  { sentence: "This TV ____（连续剧）is very popular.", answer: "series", hint: "s" },
+  { sentence: "The book was ____（出版）in 2020.", answer: "published", hint: "pu" },
+  { sentence: "I can ____（抵达）school in 10 minutes.", answer: "reach", hint: "r" },
+  { sentence: "Don't give up. Try ____（最终）you will succeed.", answer: "finally", hint: "f" },
+  { sentence: "The ____（公司）employs 100 people.", answer: "company", hint: "c" },
+  { sentence: "The story is ____（想象的）. It is not real.", answer: "imagined", hint: "i" }
+];
+
+function renderWords() {
+  const wl = document.getElementById('wordList');
+  wl.innerHTML = '';
+  UNIT8_WORDS.forEach((w, i) => {
+    const card = document.createElement('div');
+    card.className = 'word-card';
+    card.innerHTML = `
+      <div class="word-card-inner">
+        <div class="word-card-front">
+          <div class="word">${w.word}</div>
+          <div class="phonetic">${w.phonetic}</div>
+          <div class="tap-hint">👆 点击翻转</div>
+        </div>
+        <div class="word-card-back">
+          <div>
+            <div class="meaning">${w.meaning}</div>
+          </div>
+        </div>
+      </div>`;
+    card.addEventListener('click', () => card.classList.toggle('flipped'));
+    wl.appendChild(card);
+  });
+
+  CHUNKS.forEach((c, i) => {
+    const card = document.createElement('div');
+    card.className = 'word-card';
+    card.innerHTML = `
+      <div class="word-card-inner">
+        <div class="word-card-front ext">
+          <div class="word">${c.word}</div>
+          <div class="chunk-note">${c.note}</div>
+          <div class="tap-hint">👆 点击翻转</div>
+        </div>
+        <div class="word-card-back">
+          <div>
+            <div class="meaning">${c.meaning}</div>
+          </div>
+        </div>
+      </div>`;
+    card.addEventListener('click', () => card.classList.toggle('flipped'));
+    wl.appendChild(card);
+  });
+}
+
+function renderExt() {
+  const el = document.getElementById('extList');
+  el.innerHTML = '';
+  EXT_WORDS.forEach(w => {
+    const card = document.createElement('div');
+    card.className = 'word-card';
+    card.innerHTML = `
+      <div class="word-card-inner">
+        <div class="word-card-front ext">
+          <div class="word">${w.word}</div>
+          <div class="tap-hint">👆 点击翻转</div>
+        </div>
+        <div class="word-card-back">
+          <div><div class="meaning">${w.meaning}</div></div>
+        </div>
+      </div>`;
+    card.addEventListener('click', () => card.classList.toggle('flipped'));
+    el.appendChild(card);
+  });
+}
+
+function renderTests() {
+  const tl = document.getElementById('testList');
+  tl.innerHTML = '';
+  TESTS.forEach((t, i) => {
+    const item = document.createElement('div');
+    item.className = 'test-item';
+    const regex = /（.+?）/;
+    let html = t.sentence;
+    html = html.replace(regex, '<b style="color:#667eea;font-weight:700">（' + t.hint + '）</b>');
+    item.innerHTML = `
+      <div class="sentence">${i+1}. ${html}</div>
+      <input type="text" id="t${i}" data-idx="${i}" placeholder="填入单词或短语" autocomplete="off">`;
+    tl.appendChild(item);
+  });
+}
+
+function updateProgress() {
+  let pct = 0;
+  TESTS.forEach((t, i) => {
+    const val = document.getElementById('t'+i).value.trim().toLowerCase();
+    if (val === t.answer.toLowerCase()) pct += 10;
+  });
+  document.getElementById('progFill').style.width = pct + '%';
+  document.getElementById('progPct').textContent = pct + '%';
+}
+
+document.getElementById('testList').addEventListener('input', updateProgress);
+
+function submitTest() {
+  let correct = 0;
+  let errors = [];
+  TESTS.forEach((t, i) => {
+    const input = document.getElementById('t'+i);
+    const val = input.value.trim().toLowerCase();
+    if (val === t.answer.toLowerCase()) {
+      input.className = 'correct';
+      correct++;
+    } else {
+      input.className = 'wrong';
+      errors.push({ q: i+1, expected: t.answer, got: val || '(空)' });
+    }
+  });
+
+  const score = correct;
+  const pct = score * 10;
+  document.getElementById('progFill').style.width = pct + '%';
+  document.getElementById('progPct').textContent = pct + '%';
+
+  let emoji = '🎉', title = '今日通关成功！', msg = '太棒了！继续加油！';
+  if (pct < 60) { emoji = '💪'; title = '战报已送达爸爸的基地'; msg = '再接再厉，睡前复习一遍错题！'; }
+  else if (pct < 80) { emoji = '👍'; title = '战报已送达爸爸的基地'; msg = '不错！睡前过一遍今天的词！'; }
+
+  document.getElementById('resEmoji').textContent = emoji;
+  document.getElementById('resTitle').textContent = title;
+  document.getElementById('resScore').textContent = score + '/10';
+  document.getElementById('resMsg').textContent = msg;
+
+  if (errors.length) {
+    document.getElementById('resMsg').innerHTML += '<br><br><b>错题：</b>' + errors.map(e => `<br>第${e.q}题：答案 ${e.expected}，你的：${e.got}`).join('');
+  }
+
+  document.getElementById('resultOverlay').classList.add('show');
+
+  // 提交到 Formspree（如果配置了FORM_ENDPOINT，替换下方URL即可）
+  const FORM_ENDPOINT = 'https://formspree.io/f/YOUR_FORM_ID';
+  const data = { level: 9, date: '2026-05-24', score: score, correct: correct, errors: errors.map(e => e.q + ':' + e.expected + '<' + e.got) };
+  if (FORM_ENDPOINT !== 'https://formspree.io/f/YOUR_FORM_ID') {
+    fetch(FORM_ENDPOINT, { method: 'POST', body: JSON.stringify(data), headers: { 'Content-Type': 'application/json' } });
+  }
+
+  document.getElementById('submitBtn').disabled = true;
+}
+
+function closeResult() {
+  document.getElementById('resultOverlay').classList.remove('show');
+}
+
+renderWords();
+renderExt();
+renderTests();
+</script>
+</body>
+</html>
