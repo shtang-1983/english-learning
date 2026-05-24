@@ -1,1 +1,224 @@
-<h1>Test</h1>
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>关卡1 - 英语学习</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f8f9fa; color: #333; line-height: 1.6; padding: 20px; }
+  .container { max-width: 600px; margin: 0 auto; }
+  .header { background: linear-gradient(135deg, #667eea, #764ba2); color: white; padding: 24px; border-radius: 16px; text-align: center; margin-bottom: 20px; }
+  .header h1 { font-size: 24px; margin-bottom: 8px; }
+  .header p { opacity: 0.9; font-size: 14px; }
+  .card { background: white; border-radius: 12px; padding: 20px; margin-bottom: 16px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+  .card-title { font-size: 16px; font-weight: 600; color: #667eea; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+  .word-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .word-item { background: #f8f9fa; padding: 10px; border-radius: 8px; border-left: 3px solid #667eea; }
+  .word-item.chunk { border-left-color: #f6ad55; background: #fffaf0; }
+  .word-item .word { font-size: 15px; font-weight: 600; color: #2d3748; }
+  .word-item .meaning { font-size: 13px; color: #718096; margin-top: 2px; }
+  .word-item .phonetic { font-size: 12px; color: #a0aec0; }
+  .chunk-note { font-size: 11px; color: #f6ad55; margin-top: 4px; }
+  .test-item { background: #f8f9fa; padding: 14px; border-radius: 10px; margin-bottom: 10px; }
+  .test-item .sentence { font-size: 14px; color: #2d3748; margin-bottom: 8px; }
+  .test-item input { width: 100%; padding: 8px 12px; border: 1.5px solid #e2e8f0; border-radius: 8px; font-size: 14px; outline: none; transition: border-color 0.2s; }
+  .test-item input:focus { border-color: #667eea; }
+  .test-item input.correct { border-color: #48bb78; background: #f0fff4; }
+  .test-item input.wrong { border-color: #fc8181; background: #fff5f5; }
+  .btn { display: block; width: 100%; padding: 14px; background: linear-gradient(135deg, #667eea, #764ba2); color: white; border: none; border-radius: 12px; font-size: 16px; font-weight: 600; cursor: pointer; transition: transform 0.1s, box-shadow 0.2s; }
+  .btn:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4); }
+  .btn:active { transform: translateY(0); }
+  .result-card { display: none; }
+  .score-ring { width: 100px; height: 100px; border-radius: 50%; background: linear-gradient(135deg, #667eea, #764ba2); display: flex; align-items: center; justify-content: center; margin: 0 auto 16px; }
+  .score-ring span { color: white; font-size: 28px; font-weight: 700; }
+  .progress-bar { background: #e2e8f0; height: 8px; border-radius: 4px; overflow: hidden; margin-top: 12px; }
+  .progress-bar .fill { background: linear-gradient(135deg, #667eea, #764ba2); height: 100%; border-radius: 4px; transition: width 0.5s ease; }
+  .word-tag { display: inline-block; background: #edf2f7; padding: 2px 8px; border-radius: 4px; font-size: 12px; color: #4a5568; margin: 2px; }
+  .word-tag.new { background: #bee3f8; color: #2b6cb0; }
+  .word-tag.weak { background: #fed7d7; color: #c53030; }
+  .ext-section { background: #fffaf0; border: 1px solid #feebc8; }
+  .ext-section .card-title { color: #dd6b20; }
+</style>
+</head>
+<body>
+<div class="container">
+
+<div class="header">
+  <h1>📗 关卡1 · 出发啦！</h1>
+  <p>人教版7年级上 · Starter Units 1-3</p>
+</div>
+
+<!-- 第一部分：新词学习 -->
+<div class="card">
+  <div class="card-title">📖 第一部分：新词学习（6-7分钟）</div>
+  <div class="word-grid">
+    <div class="word-item">
+      <div class="word">hi</div>
+      <div class="phonetic">/haɪ/</div>
+      <div class="meaning">你好，嗨</div>
+    </div>
+    <div class="word-item">
+      <div class="word">hello</div>
+      <div class="phonetic">/həˈloʊ/</div>
+      <div class="meaning">喂，你好</div>
+    </div>
+    <div class="word-item">
+      <div class="word">good</div>
+      <div class="phonetic">/ɡʊd/</div>
+      <div class="meaning">好的</div>
+    </div>
+    <div class="word-item">
+      <div class="word">morning</div>
+      <div class="phonetic">/ˈmɔːrnɪŋ/</div>
+      <div class="meaning">早晨，上午</div>
+    </div>
+    <div class="word-item">
+      <div class="word">afternoon</div>
+      <div class="phonetic">/ˌæftərˈnuːn/</div>
+      <div class="meaning">下午</div>
+    </div>
+    <div class="word-item">
+      <div class="word">evening</div>
+      <div class="phonetic">/ˈiːvnɪŋ/</div>
+      <div class="meaning">傍晚，晚上</div>
+    </div>
+    <div class="word-item">
+      <div class="word">I</div>
+      <div class="phonetic">/aɪ/</div>
+      <div class="meaning">我</div>
+    </div>
+    <div class="word-item">
+      <div class="word">am</div>
+      <div class="phonetic">/æm/</div>
+      <div class="meaning">是（be动词）</div>
+    </div>
+    <div class="word-item chunk">
+      <div class="word">Good morning!</div>
+      <div class="meaning">早上好！</div>
+      <div class="chunk-note">⚡ 必考打招呼用语</div>
+    </div>
+    <div class="word-item chunk">
+      <div class="word">How are you?</div>
+      <div class="meaning">你好吗？</div>
+      <div class="chunk-note">⚡ 江苏中考高频问答</div>
+    </div>
+  </div>
+</div>
+
+<!-- 1.5部分：拓展加餐 -->
+<div class="card ext-section">
+  <div class="card-title">🍰 1.5部分：拓展加餐（看认识即可）</div>
+  <div class="word-grid">
+    <div class="word-item">
+      <div class="word">bye</div>
+      <div class="meaning">再见（口语）</div>
+    </div>
+    <div class="word-item">
+      <div class="word">see you</div>
+      <div class="meaning">再见（更地道）</div>
+    </div>
+    <div class="word-item">
+      <div class="word">CD</div>
+      <div class="meaning">光盘（Compact Disc）</div>
+    </div>
+  </div>
+</div>
+
+<!-- 第二部分：语境填空测试 -->
+<div class="card">
+  <div class="card-title">✏️ 第二部分：语境填空测试（5分钟）</div>
+  <div class="test-item">
+    <div class="sentence">— _____ are you?<br>— I'm fine, thanks.</div>
+    <input type="text" placeholder="首字母提示 + 语境填空" data-answer="How">
+  </div>
+  <div class="test-item">
+    <div class="sentence">_____ morning, Mr. Wang!</div>
+    <input type="text" placeholder="首字母提示" data-answer="Good">
+  </div>
+  <div class="test-item">
+    <div class="sentence">I _____ Linda. Nice to meet you!</div>
+    <input type="text" placeholder="提示：看见" data-answer="am">
+  </div>
+  <div class="test-item">
+    <div class="sentence">Good _____, Mom! See you tomorrow.</div>
+    <input type="text" placeholder="首字母提示" data-answer="morning">
+  </div>
+  <div class="test-item">
+    <div class="sentence">How _____ you today?</div>
+    <input type="text" placeholder="首字母提示" data-answer="are">
+  </div>
+  <div class="test-item">
+    <div class="sentence">Good _____（下午）, Miss Li!</div>
+    <input type="text" placeholder="中文提示" data-answer="afternoon">
+  </div>
+  <div class="test-item">
+    <div class="sentence">I _____ Tom. Nice to meet you.</div>
+    <input type="text" placeholder="提示：am的变形" data-answer="am">
+  </div>
+  <div class="test-item">
+    <div class="sentence">— Hello!<br>— _____!</div>
+    <input type="text" placeholder="回应问好" data-answer="Hi">
+  </div>
+  <div class="test-item">
+    <div class="sentence">Good _____（晚上）, Dad!</div>
+    <input type="text" placeholder="中文提示" data-answer="evening">
+  </div>
+  <div class="test-item">
+    <div class="sentence">Good afternoon! How are you? — I'm _____, thanks.</div>
+    <input type="text" placeholder="提示：好的" data-answer="good">
+  </div>
+</div>
+
+<button class="btn" onclick="checkAnswers()">提交答案</button>
+
+<!-- 结果 -->
+<div class="card result-card" id="result">
+  <div class="card-title">📊 学习结果</div>
+  <div class="score-ring"><span id="score">0</span>/10</div>
+  <div id="feedback" style="text-align:center;margin-bottom:12px;"></div>
+  <div class="progress-bar"><div class="fill" id="progressFill" style="width:0%"></div></div>
+  <div id="errors" style="margin-top:16px;"></div>
+</div>
+
+</div>
+
+<script>
+function checkAnswers() {
+  const inputs = document.querySelectorAll('.test-item input');
+  let correct = 0;
+  let errors = [];
+  inputs.forEach((input, i) => {
+    const answer = input.dataset.answer.trim();
+    const userAnswer = input.value.trim();
+    if (userAnswer.toLowerCase() === answer.toLowerCase()) {
+      input.className = 'correct';
+      correct++;
+    } else {
+      input.className = 'wrong';
+      errors.push({ q: i+1, expected: answer, got: userAnswer || '(空)' });
+    }
+  });
+  const score = correct;
+  document.getElementById('score').textContent = score;
+  document.getElementById('progressFill').style.width = (score*10) + '%';
+  const pct = score * 10;
+  let fb = '';
+  if (pct >= 90) fb = '🎉 太棒了！全对！';
+  else if (pct >= 70) fb = '👍 不错，再接再厉！';
+  else fb = '💪 加油，多复习几遍！';
+  document.getElementById('feedback').textContent = fb;
+  let errHTML = '';
+  if (errors.length) {
+    errHTML = '<strong>错题：</strong><br>';
+    errors.forEach(e => {
+      errHTML += `<div style="margin:6px 0;">第${e.q}题：答案 <strong>${e.expected}</strong>，你的：${e.got}</div>`;
+    });
+  }
+  document.getElementById('errors').innerHTML = errHTML;
+  document.getElementById('result').style.display = 'block';
+  document.getElementById('result').scrollIntoView({ behavior: 'smooth' });
+}
+</script>
+</body>
+</html>
